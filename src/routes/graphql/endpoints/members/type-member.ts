@@ -7,8 +7,8 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 
-export const membersTypeEnum = new GraphQLEnumType({
-  name: 'MemberType',
+export const memberTypeId = new GraphQLEnumType({
+  name: 'MemberTypeId',
   description:
     'one of two possible member types - BUSINESS or BASIC according to the prisma db',
   values: {
@@ -22,11 +22,11 @@ export const membersTypeEnum = new GraphQLEnumType({
 });
 
 export const memberType = new GraphQLObjectType({
-  name: 'GetMemberType',
+  name: 'MemberType',
   description: 'posibble fields for getting members',
   fields: () => ({
     id: {
-      type: new GraphQLNonNull(membersTypeEnum),
+      type: new GraphQLNonNull(memberTypeId),
       description: 'Identifiers the type of member.',
     },
     discount: {
