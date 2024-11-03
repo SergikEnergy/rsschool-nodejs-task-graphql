@@ -13,7 +13,7 @@ export const getPostByIdQuery: GraphQLFieldConfig<unknown, RootContext, Args> = 
   args: {
     id: {
       type: new GraphQLNonNull(UUIDType),
-      description: 'The id of the member BASIC or BUSINESS.',
+      description: 'The id of the post',
     },
   },
   resolve: async (_obj, { id }, context) =>
