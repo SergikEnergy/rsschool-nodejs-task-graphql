@@ -16,7 +16,9 @@ export const changePostMutation: GraphQLFieldConfig<unknown, RootContext, Args> 
     id: { type: new GraphQLNonNull(UUIDType) },
     dto: { type: new GraphQLNonNull(changePostInputType) },
   },
-  resolve: (_obj, { id, dto }, context) => {
-    return context.prisma.post.update({ where: { id }, data: dto });
+  resolve: async (_obj, { id, dto }, context) => {
+    const updatedPost = await context.prisma.post.update({ where: { id }, data: dto });
+
+    return updatedPost;
   },
 };

@@ -8,7 +8,7 @@ import { memberTypeId } from '../../members/member-type.js';
 import { UUIDType } from '../../../types/uuid.js';
 
 export const createProfileInputType = new GraphQLInputObjectType({
-  name: 'CreateProfileInputType',
+  name: 'CreateProfileInput',
   fields: {
     isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },

@@ -6,7 +6,7 @@ import {
 } from 'graphql';
 
 export const createUserInputType = new GraphQLInputObjectType({
-  name: 'CreateUserInputType',
+  name: 'CreateUserInput',
   fields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
@@ -14,7 +14,7 @@ export const createUserInputType = new GraphQLInputObjectType({
 });
 
 export const changeUserInputType = new GraphQLInputObjectType({
-  name: 'ChangeUserInputType',
+  name: 'ChangeUserInput',
   fields: {
     name: { type: GraphQLString },
     balance: { type: GraphQLFloat },

@@ -15,7 +15,10 @@ export const createPostMutation: GraphQLFieldConfig<unknown, RootContext, Args> 
       type: new GraphQLNonNull(createPostInputType),
     },
   },
-  resolve: (_obj, { dto }, context) => {
-    return context.prisma.post.create({ data: dto });
+  resolve: async (_obj, { dto }, context) => {
+    const newPost = await context.prisma.post.create({ data: dto });
+    context.loaders.getPostsByAuthorId.clear(dto.authorId);
+
+    return newPost;
   },
 };

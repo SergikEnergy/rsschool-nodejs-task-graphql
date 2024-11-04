@@ -13,7 +13,7 @@ import { subscribeToMutation } from '../endpoints/users/mutations/subscribe-to-u
 import { unsubscribeFromMutation } from '../endpoints/users/mutations/unsubscribe-from-user.js';
 
 export const rootMutationType = new GraphQLObjectType<unknown, RootContext>({
-  name: 'RootQuery',
+  name: 'RootMutation',
   fields: () => ({
     createUser: createUserMutation,
     createProfile: createProfileMutation,
