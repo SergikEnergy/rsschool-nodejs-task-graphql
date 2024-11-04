@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
+import { createDataLoaders } from './create-data-loaders.js';
 
 export type RootContext = {
-  prismaDb: PrismaClient;
+  prisma: PrismaClient;
+  loaders: ReturnType<typeof createDataLoaders>;
 };

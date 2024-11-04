@@ -17,5 +17,5 @@ export const getPostByIdQuery: GraphQLFieldConfig<unknown, RootContext, Args> = 
     },
   },
   resolve: async (_obj, { id }, context) =>
-    context.prismaDb.post.findUnique({ where: { id } }),
+    context.prisma.post.findUnique({ where: { id } }),
 };

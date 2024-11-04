@@ -17,5 +17,5 @@ export const getProfileByIdQuery: GraphQLFieldConfig<unknown, RootContext, Args>
     },
   },
   resolve: async (_obj, { id }, context) =>
-    context.prismaDb.profile.findUnique({ where: { id } }),
+    context.prisma.profile.findUnique({ where: { id } }),
 };

@@ -2,28 +2,30 @@ import {
   GraphQLEnumType,
   GraphQLFloat,
   GraphQLInt,
-  GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
 } from 'graphql';
+import { RootContext } from '../../root-context.js';
 
 export const memberTypeId = new GraphQLEnumType({
   name: 'MemberTypeId',
   description:
     'one of two possible member types - BUSINESS or BASIC according to the prisma db',
   values: {
-    BASIC: {
-      value: 'BASIC',
-    },
-    BUSINESS: {
-      value: 'BUSINESS',
-    },
+    BASIC: { value: 'BASIC' },
+    BUSINESS: { value: 'BUSINESS' },
   },
 });
 
-export const memberType = new GraphQLObjectType({
+export type MemberFieldsType = {
+  id: string;
+  discount: number;
+  postsLimitPerMonth: number;
+};
+
+export const memberType = new GraphQLObjectType<MemberFieldsType, RootContext>({
   name: 'MemberType',
-  description: 'posibble fields for getting members',
+  description: 'possible fields for getting members',
   fields: () => ({
     id: {
       type: new GraphQLNonNull(memberTypeId),
@@ -39,7 +41,3 @@ export const memberType = new GraphQLObjectType({
     },
   }),
 });
-
-export const membersListType = new GraphQLNonNull(
-  new GraphQLList(new GraphQLNonNull(memberType)),
-);

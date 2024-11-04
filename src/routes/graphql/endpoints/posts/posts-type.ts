@@ -1,7 +1,16 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from '../../types/uuid.js';
+import { userType } from '../users/user-type.js';
+import { RootContext } from '../../root-context.js';
 
-export const postType = new GraphQLObjectType({
+export type PostType = {
+  id: string;
+  title: string;
+  content: string;
+  authorId: string;
+};
+
+export const postType = new GraphQLObjectType<PostType, RootContext>({
   name: 'Post',
   description: 'describe available post type fields',
   fields: () => ({
@@ -17,14 +26,19 @@ export const postType = new GraphQLObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: 'describe post content, should be string',
     },
-    //TODO check if need this field - or provide full authors info instead
-    // authorId: {
-    //   type: new GraphQLNonNull(UUIDType),
-    //   description: 'Unique id for the author of the post, should be in uuid format',
-    // },
+    authorId: {
+      type: new GraphQLNonNull(UUIDType),
+      description: "Unique author's post id, should be in uuid format",
+    },
+    author: {
+      type: new GraphQLNonNull(userType),
+      description: 'info about author of this post, should have User type',
+      resolve: async (post, _args, context) =>
+        await context.prisma.user.findUnique({
+          where: {
+            id: post.authorId,
+          },
+        }),
+    },
   }),
 });
-
-export const postsListType = new GraphQLNonNull(
-  new GraphQLList(new GraphQLNonNull(postType)),
-);
