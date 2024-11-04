@@ -1,4 +1,4 @@
-import { MemberType, PrismaClient, User } from '@prisma/client';
+import { MemberType, Post, PrismaClient, User } from '@prisma/client';
 import DataLoader from 'dataloader';
 
 type ReadonlyIdsArray<T> = ReadonlyArray<T>;
@@ -29,9 +29,17 @@ export const createDataLoaders = (clientDb: PrismaClient) => ({
       },
     });
 
-    const postsMap = createMapFromItem(posts, 'authorId');
+    const postMap = posts.reduce((acc, curr) => {
+      if (!acc.has(curr.authorId)) {
+        acc.set(curr.authorId, []);
+      }
+      const currMapValue = acc.get(curr.authorId)!;
+      currMapValue.push(curr);
 
-    return ids.map((id) => postsMap.get(id) || []);
+      return acc;
+    }, new Map<string, Post[]>());
+
+    return ids.map((id) => postMap.get(id) || []);
   }),
   getProfilesByUserId: new DataLoader(async (ids: UserIdsArray) => {
     const profiles = await clientDb.profile.findMany({
@@ -44,11 +52,51 @@ export const createDataLoaders = (clientDb: PrismaClient) => ({
 
     return ids.map((id) => profilesMap.get(id));
   }),
-  memberTypeDataLoader: new DataLoader(async (ids: MemberTypeIdsArray) => {
+  getMemberTypeById: new DataLoader(async (ids: MemberTypeIdsArray) => {
     const memberTypes = await clientDb.memberType.findMany({
       where: { id: { in: [...ids] } },
     });
 
-    return ids.map((id) => memberTypes.find((memberType) => memberType.id === id));
+    const memberTypesMap = createMapFromItem(memberTypes, 'id');
+
+    return ids.map((id) => memberTypesMap.get(id));
+  }),
+  getUserSubscribedTo: new DataLoader(async (ids: UserIdsArray) => {
+    const userSubscriptions = await clientDb.subscribersOnAuthors.findMany({
+      where: {
+        subscriberId: { in: [...ids] },
+      },
+      include: { author: true },
+    });
+
+    const userSubscriptionsMap = userSubscriptions.reduce((acc, curr) => {
+      if (!acc.has(curr.subscriberId)) {
+        acc.set(curr.subscriberId, []);
+      }
+      const currMapValue = acc.get(curr.subscriberId)!;
+      currMapValue.push(curr.author);
+      return acc;
+    }, new Map<string, User[]>());
+
+    return ids.map((id) => userSubscriptionsMap.get(id) || []);
+  }),
+  getSubscribedToUser: new DataLoader(async (ids: UserIdsArray) => {
+    const followers = await clientDb.subscribersOnAuthors.findMany({
+      where: {
+        authorId: { in: [...ids] },
+      },
+      include: { subscriber: true },
+    });
+
+    const followersMap = followers.reduce((acc, curr) => {
+      if (!acc.has(curr.authorId)) {
+        acc.set(curr.authorId, []);
+      }
+      const currMapValue = acc.get(curr.authorId)!;
+      currMapValue.push(curr.subscriber);
+      return acc;
+    }, new Map<string, User[]>());
+
+    return ids.map((id) => followersMap.get(id) || []);
   }),
 });

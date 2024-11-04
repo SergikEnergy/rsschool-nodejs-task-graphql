@@ -1,8 +1,14 @@
 import { GraphQLFieldConfig } from 'graphql';
 import { RootContext } from '../../../root-context.js';
 import { postsListType } from '../posts-list-type.js';
+import { Post } from '@prisma/client';
 
-export const getPostsQuery: GraphQLFieldConfig<unknown, RootContext> = {
+type Args = {
+  authorId: Post['authorId'];
+};
+
+export const getPostsQuery: GraphQLFieldConfig<unknown, RootContext, Args> = {
   type: postsListType,
-  resolve: async (_obj, _args, context) => context.prisma.post.findMany(),
+  resolve: async (_obj, { authorId }, context) =>
+    context.prisma.post.findMany({ where: { authorId } }),
 };

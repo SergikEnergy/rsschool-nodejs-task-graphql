@@ -44,7 +44,7 @@ export const userType: GraphQLObjectType = new GraphQLObjectType<
       description: 'user current balance, should be a float number',
     },
     profile: {
-      type: profileType as GraphQLObjectType,
+      type: profileType,
       description:
         'provide information about current user profile, should have Profile type',
       resolve: async (user, _args, context) =>
@@ -60,11 +60,12 @@ export const userType: GraphQLObjectType = new GraphQLObjectType<
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(userType))),
       description: "provide an information about user's, who is current subscribed to",
       resolve: async (user, _args, context) => {
-        if (!user.userSubscribedTo || !user.userSubscribedTo.length) return;
+        if (user.userSubscribedTo && user.userSubscribedTo.length) {
+          const ids = user.userSubscribedTo.map((user) => user.authorId);
+          return context.loaders.usersLoader.loadMany(ids);
+        }
 
-        const subscriptionIds = user.userSubscribedTo.map((elem) => elem.authorId);
-
-        return await context.loaders.usersLoader.loadMany(subscriptionIds);
+        return context.loaders.getUserSubscribedTo.load(user.id);
       },
     },
     subscribedToUser: {
@@ -72,10 +73,12 @@ export const userType: GraphQLObjectType = new GraphQLObjectType<
       description:
         "provide an information about user's, who is subscribed to current user",
       resolve: async (user, _args, context) => {
-        if (!user.subscribedToUser || !user.subscribedToUser.length) return;
+        if (user.subscribedToUser && user.subscribedToUser.length) {
+          const ids = user.subscribedToUser.map((user) => user.subscriberId);
+          return context.loaders.usersLoader.loadMany(ids);
+        }
 
-        const followerIds = user.subscribedToUser.map((elem) => elem.subscriberId);
-        return await context.loaders.usersLoader.loadMany(followerIds);
+        return context.loaders.getSubscribedToUser.load(user.id);
       },
     },
   }),
