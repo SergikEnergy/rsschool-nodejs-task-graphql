@@ -1,15 +1,15 @@
 ## Assignment: Graphql
 
-### Tasks:  
+### Tasks
 
 1. Add logic to the graphql endpoint: ./src/routes/graphql.  
    Constraints and logic for gql queries should be done based on restful implementation.  
    As a result, you should get a gql schema like [this](https://github.com/nosbog/rsschool-nodejs-task-graphql/blob/main/schema.graphql).  
    1.1. npm run test-queries  
-   1.2. npm run test-mutations  
+   1.2. npm run test-mutations
 2. Limit the complexity of the graphql queries by their depth with [graphql-depth-limit](https://www.npmjs.com/package/graphql-depth-limit) package.  
    Use value "5" for the package.  
-   2.1. npm run test-rule  
+   2.1. npm run test-rule
 3. Solve `n+1` graphql problem with [dataloader](https://www.npmjs.com/package/dataloader).  
    You can use only one "findMany" call per loader to consider this task completed.  
    3.1. npm run test-loader  
@@ -17,9 +17,9 @@
    When you query all users, you don't have to use the database again when you want to find subs.  
    Pre-place users in the appropriate dataloader cache.  
    To determine if a user is a sub you need to do the appropriate join ([include](https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#include)).  
-   But only do a join when you need it. You can use [graphql-parse-resolve-info](https://github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info) package to parse GraphQLResolveInfo to determine if subs are expected in the response.  
+   But only do a join when you need it. You can use [graphql-parse-resolve-info](https://github.com/graphile/graphile-engine/tree/master/packages/graphql-parse-resolve-info) package to parse GraphQLResolveInfo to determine if subs are expected in the response.
 
-### Info:  
+### Info
 
 It is forbidden to add new npm dependencies.  
 You should only modify/add the code inside the folder ./src/routes/graphql.  
@@ -28,20 +28,37 @@ Do not create files with the name "index.ts". This name is reserved for fastify 
 You are responsible for using style configs that are in the repository.  
 Make sure the important files have not been changed: npm run test-integrity.  
 If the test was partially completed, then it is considered not completed.  
-If the one test was not completed, then the subsequent ones are considered not completed.  
+If the one test was not completed, then the subsequent ones are considered not completed.
 
-Steps to get started:  
+Steps to get started:
 
-1. Install dependencies: npm ci  
-2. Create .env file (based on .env.example): ./.env  
-3. Create db file: ./prisma/database.db  
-4. Apply pending migrations: npx prisma migrate deploy  
-5. Seed db: npx prisma db seed  
-6. Start server: npm run start  
+1. Install dependencies: npm ci
+2. Create .env file (based on .env.example): ./.env
+3. Create db file: ./prisma/database.db
+4. Apply pending migrations: npx prisma migrate deploy
+5. Seed db: npx prisma db seed
+6. Start server: npm run start
 
-Useful things:  
+Useful things:
 
-- Database GUI: npx prisma studio  
-- Reset database: npx prisma migrate reset (this command triggers db seeding)  
-- To test an existing rest api (swagger): [::1]:8000/docs  
-- For ease of test of graphql you can use [api platform](https://learning.postman.com/docs/sending-requests/graphql/graphql-overview/) that can fetch [introspection](https://graphql.org/learn/introspection/)  
+- Database GUI: npx prisma studio
+- Reset database: npx prisma migrate reset (this command triggers db seeding)
+- To test an existing rest api (swagger): [::1]:8000/docs
+- For ease of test of graphql you can use [api platform](https://learning.postman.com/docs/sending-requests/graphql/graphql-overview/) that can fetch [introspection](https://graphql.org/learn/introspection/)
+
+### Review process
+
+**Please - follow the instructions before inside README**
+Pay attention to **npm ci** - in order to not change the versions of the libraries
+
+1. I installed the dependencies with node 22.8 version, _PLEASE_ use the same version
+2. try to type into terminal _npm run start_ in order to check the correct working process
+3. **npm run test-integrity** - check if there is interaction with graphQL at all to avoid 0 for the task
+4. **npm run test-queries** - check test cases for queries requests/responses
+5. **npm run test-mutations** - check test cases for mutations requests/responses
+6. **npm run test-rule** - check test cases for correct working depth limit rule
+7. **npm run test-loader** - check test cases for data loaders from preinstalled packages data-loader
+
+**the rest part didn't implemented on time**
+
+_Thanks for the Review process!_
