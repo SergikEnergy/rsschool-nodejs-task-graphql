@@ -2,16 +2,10 @@ import { GraphQLBoolean, GraphQLInt, GraphQLNonNull, GraphQLObjectType } from 'g
 import { UUIDType } from '../../types/uuid.js';
 import { memberType, memberTypeId } from '../members/member-type.js';
 import { RootContext } from '../../root-context.js';
+import { Profile } from '@prisma/client';
+import { userType } from '../users/user-type.js';
 
-export type ProfileFieldsType = {
-  id: string;
-  isMale: boolean;
-  yearOfBirth: number;
-  memberTypeID: string;
-  userId: string;
-};
-
-export const profileType = new GraphQLObjectType<ProfileFieldsType, RootContext>({
+export const profileType = new GraphQLObjectType<Profile, RootContext>({
   name: 'Profile',
   description: 'describe available profiles type fields',
   fields: () => ({
@@ -36,10 +30,16 @@ export const profileType = new GraphQLObjectType<ProfileFieldsType, RootContext>
       description: "describe member's type: BASIC | BUSINESS",
     },
     memberType: {
-      type: memberType,
+      type: new GraphQLNonNull(memberType),
       description: 'contains member types according to the member type ud',
       resolve: async (profile, _args, context) =>
-        await context.loaders.memberTypeDataLoader.load(profile.memberTypeID),
+        await context.loaders.memberTypeDataLoader.load(profile.memberTypeId),
+    },
+    user: {
+      type: new GraphQLNonNull(userType),
+      description: 'contains member types according to the member type ud',
+      resolve: async (profile, _args, context) =>
+        await context.prisma.profile.findUnique({ where: { id: profile.userId } }),
     },
   }),
 });

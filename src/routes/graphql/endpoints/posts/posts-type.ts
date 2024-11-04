@@ -2,15 +2,9 @@ import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { UUIDType } from '../../types/uuid.js';
 import { userType } from '../users/user-type.js';
 import { RootContext } from '../../root-context.js';
+import { Post } from '@prisma/client';
 
-export type PostType = {
-  id: string;
-  title: string;
-  content: string;
-  authorId: string;
-};
-
-export const postType = new GraphQLObjectType<PostType, RootContext>({
+export const postType = new GraphQLObjectType<Post, RootContext>({
   name: 'Post',
   description: 'describe available post type fields',
   fields: () => ({
@@ -34,11 +28,7 @@ export const postType = new GraphQLObjectType<PostType, RootContext>({
       type: new GraphQLNonNull(userType),
       description: 'info about author of this post, should have User type',
       resolve: async (post, _args, context) =>
-        await context.prisma.user.findUnique({
-          where: {
-            id: post.authorId,
-          },
-        }),
+        await context.loaders.usersLoader.load(post.authorId),
     },
   }),
 });

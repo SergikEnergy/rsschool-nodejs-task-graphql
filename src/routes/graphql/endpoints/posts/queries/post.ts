@@ -1,4 +1,4 @@
-import { GraphQLFieldConfig, GraphQLNonNull } from 'graphql';
+import { GraphQLFieldConfig, GraphQLNonNull, GraphQLObjectType } from 'graphql';
 import { RootContext } from '../../../root-context.js';
 import { Post } from '@prisma/client';
 import { UUIDType } from '../../../types/uuid.js';
@@ -9,11 +9,11 @@ type Args = {
 };
 
 export const getPostByIdQuery: GraphQLFieldConfig<unknown, RootContext, Args> = {
-  type: postType,
+  type: postType as GraphQLObjectType,
   args: {
     id: {
       type: new GraphQLNonNull(UUIDType),
-      description: 'The id of the post',
+      description: 'Unique post id',
     },
   },
   resolve: async (_obj, { id }, context) =>

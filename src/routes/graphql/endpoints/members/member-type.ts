@@ -6,6 +6,7 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 import { RootContext } from '../../root-context.js';
+import { MemberType } from '@prisma/client';
 
 export const memberTypeId = new GraphQLEnumType({
   name: 'MemberTypeId',
@@ -17,13 +18,7 @@ export const memberTypeId = new GraphQLEnumType({
   },
 });
 
-export type MemberFieldsType = {
-  id: string;
-  discount: number;
-  postsLimitPerMonth: number;
-};
-
-export const memberType = new GraphQLObjectType<MemberFieldsType, RootContext>({
+export const memberType = new GraphQLObjectType<MemberType, RootContext>({
   name: 'MemberType',
   description: 'possible fields for getting members',
   fields: () => ({
